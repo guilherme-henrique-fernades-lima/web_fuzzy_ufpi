@@ -92,12 +92,14 @@ function Example() {
 }
 
 export default function MainPage() {
-  const [humanosSuscetiveis, setHumanosSuscetiveis] = useState("");
-  const [humanosInfectados, setHumanosInfectados] = useState("");
-  const [vetoresSuscetiveis, setVetoresSuscetiveis] = useState("");
-  const [vetoresInfectados, setVetoresInfectados] = useState("");
-  const [caesSuscetiveis, setCaesSuscetiveis] = useState("");
-  const [caesInfectados, setCaesInfectados] = useState("");
+  const [humanosSuscetiveis, setHumanosSuscetiveis] = useState(0.7);
+  const [humanosInfectados, setHumanosInfectados] = useState(0);
+  const [vetoresSuscetiveis, setVetoresSuscetiveis] = useState(0.24);
+  const [vetoresInfectados, setVetoresInfectados] = useState(0.01);
+  const [caesSuscetiveis, setCaesSuscetiveis] = useState(0.6);
+  const [caesInfectados, setCaesInfectados] = useState(0);
+
+  //data [0.7, 0, 0.24, 0.01, 0.6, 0];
 
   function enableButton() {
     if (
