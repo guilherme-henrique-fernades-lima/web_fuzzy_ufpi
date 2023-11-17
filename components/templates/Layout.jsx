@@ -182,7 +182,17 @@ export default function Layout(props) {
             paddingLeft: { xs: "20px", md: "30px" },
             paddingRight: { xs: "20px", md: "70px" },
           }}
-        ></Toolbar>
+        >
+          <Typography
+            variant="h3"
+            sx={{
+              fontSize: { xs: 14, sm: 16, md: 16, lg: 18 },
+              fontWeight: 700,
+            }}
+          >
+            UFPI - Sistema Fuzzy
+          </Typography>
+        </Toolbar>
       </AppBar>
       <Toolbar />
       <nav>

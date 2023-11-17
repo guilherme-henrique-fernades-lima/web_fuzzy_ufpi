@@ -14,6 +14,7 @@ import TextField from "@mui/material/TextField";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
+import Paper from "@mui/material/Paper";
 
 const data = [
   {
@@ -120,149 +121,145 @@ export default function MainPage() {
 
   return (
     <Container disableGutters>
-      <Grid container spacing={1}>
-        <Grid item xs={12} sm={6} md={4} lg={4} xl={4}>
-          <TextField
-            value={humanosSuscetiveis}
-            onChange={(e) => setHumanosSuscetiveis(e.target.value)}
-            size="small"
-            label="Humanos suscetíveis"
-            autoComplete="off"
-            fullWidth
-            InputProps={{
-              style: {
-                borderRadius: "2px",
-                backgroundColor: "#fff",
-              },
-              onInput: (e) => {
-                e.target.value = e.target.value.replace(/[^0-9]/g, "");
-              },
-            }}
-          />
-        </Grid>
+      <Paper elevation={24} sx={{ p: 2 }}>
+        <Grid container spacing={1}>
+          <Grid item xs={12} sm={6} md={4} lg={4} xl={4}>
+            <TextField
+              value={humanosSuscetiveis}
+              onChange={(e) => setHumanosSuscetiveis(e.target.value)}
+              size="small"
+              label="Humanos suscetíveis"
+              autoComplete="off"
+              fullWidth
+              InputProps={{
+                style: {
+                  borderRadius: "2px",
+                },
+                onInput: (e) => {
+                  e.target.value = e.target.value.replace(/[^0-9]/g, "");
+                },
+              }}
+            />
+          </Grid>
 
-        <Grid item xs={12} sm={6} md={4} lg={4} xl={4}>
-          <TextField
-            value={humanosInfectados}
-            onChange={(e) => setHumanosInfectados(e.target.value)}
-            size="small"
-            label="Humanos infectados"
-            autoComplete="off"
-            fullWidth
-            InputProps={{
-              style: {
-                borderRadius: "2px",
-                backgroundColor: "#fff",
-              },
-              onInput: (e) => {
-                e.target.value = e.target.value.replace(/[^0-9]/g, "");
-              },
-            }}
-          />
-        </Grid>
+          <Grid item xs={12} sm={6} md={4} lg={4} xl={4}>
+            <TextField
+              value={humanosInfectados}
+              onChange={(e) => setHumanosInfectados(e.target.value)}
+              size="small"
+              label="Humanos infectados"
+              autoComplete="off"
+              fullWidth
+              InputProps={{
+                style: {
+                  borderRadius: "2px",
+                },
+                onInput: (e) => {
+                  e.target.value = e.target.value.replace(/[^0-9]/g, "");
+                },
+              }}
+            />
+          </Grid>
 
-        <Grid item xs={12} sm={6} md={4} lg={4} xl={4}>
-          <TextField
-            value={vetoresSuscetiveis}
-            onChange={(e) => setVetoresSuscetiveis(e.target.value)}
-            size="small"
-            label="Vetores suscetíveis"
-            autoComplete="off"
-            fullWidth
-            InputProps={{
-              style: {
-                borderRadius: "2px",
-                backgroundColor: "#fff",
-              },
-              onInput: (e) => {
-                e.target.value = e.target.value.replace(/[^0-9]/g, "");
-              },
-            }}
-          />
-        </Grid>
+          <Grid item xs={12} sm={6} md={4} lg={4} xl={4}>
+            <TextField
+              value={vetoresSuscetiveis}
+              onChange={(e) => setVetoresSuscetiveis(e.target.value)}
+              size="small"
+              label="Vetores flebotomíneos suscetíveis"
+              autoComplete="off"
+              fullWidth
+              InputProps={{
+                style: {
+                  borderRadius: "2px",
+                },
+                onInput: (e) => {
+                  e.target.value = e.target.value.replace(/[^0-9]/g, "");
+                },
+              }}
+            />
+          </Grid>
 
-        <Grid item xs={12} sm={6} md={4} lg={4} xl={4}>
-          <TextField
-            value={vetoresInfectados}
-            onChange={(e) => setVetoresInfectados(e.target.value)}
-            size="small"
-            label="Vetores infectados"
-            autoComplete="off"
-            fullWidth
-            InputProps={{
-              style: {
-                borderRadius: "2px",
-                backgroundColor: "#fff",
-              },
-              onInput: (e) => {
-                e.target.value = e.target.value.replace(/[^0-9]/g, "");
-              },
-            }}
-          />
-        </Grid>
+          <Grid item xs={12} sm={6} md={4} lg={4} xl={4}>
+            <TextField
+              value={vetoresInfectados}
+              onChange={(e) => setVetoresInfectados(e.target.value)}
+              size="small"
+              label="Vetores flebotomíneos infectados"
+              autoComplete="off"
+              fullWidth
+              InputProps={{
+                style: {
+                  borderRadius: "2px",
+                },
+                onInput: (e) => {
+                  e.target.value = e.target.value.replace(/[^0-9]/g, "");
+                },
+              }}
+            />
+          </Grid>
 
-        <Grid item xs={12} sm={6} md={4} lg={4} xl={4}>
-          <TextField
-            value={caesSuscetiveis}
-            onChange={(e) => setCaesSuscetiveis(e.target.value)}
-            size="small"
-            label="Cães suscetíveis"
-            autoComplete="off"
-            fullWidth
-            InputProps={{
-              style: {
-                borderRadius: "2px",
-                backgroundColor: "#fff",
-              },
-              onInput: (e) => {
-                e.target.value = e.target.value.replace(/[^0-9]/g, "");
-              },
-            }}
-          />
-        </Grid>
+          <Grid item xs={12} sm={6} md={4} lg={4} xl={4}>
+            <TextField
+              value={caesSuscetiveis}
+              onChange={(e) => setCaesSuscetiveis(e.target.value)}
+              size="small"
+              label="Cães suscetíveis"
+              autoComplete="off"
+              fullWidth
+              InputProps={{
+                style: {
+                  borderRadius: "2px",
+                },
+                onInput: (e) => {
+                  e.target.value = e.target.value.replace(/[^0-9]/g, "");
+                },
+              }}
+            />
+          </Grid>
 
-        <Grid item xs={12} sm={6} md={4} lg={4} xl={4}>
-          <TextField
-            value={caesInfectados}
-            onChange={(e) => setCaesInfectados(e.target.value)}
-            size="small"
-            label="Cães infectados"
-            autoComplete="off"
-            fullWidth
-            InputProps={{
-              style: {
-                borderRadius: "2px",
-                backgroundColor: "#fff",
-              },
-              onInput: (e) => {
-                e.target.value = e.target.value.replace(/[^0-9]/g, "");
-              },
-            }}
-          />
-        </Grid>
+          <Grid item xs={12} sm={6} md={4} lg={4} xl={4}>
+            <TextField
+              value={caesInfectados}
+              onChange={(e) => setCaesInfectados(e.target.value)}
+              size="small"
+              label="Cães infectados"
+              autoComplete="off"
+              fullWidth
+              InputProps={{
+                style: {
+                  borderRadius: "2px",
+                },
+                onInput: (e) => {
+                  e.target.value = e.target.value.replace(/[^0-9]/g, "");
+                },
+              }}
+            />
+          </Grid>
 
-        <Grid item xs={12} sm={6} md={4} lg={4} xl={4}>
-          <Button
-            disableElevation
-            variant="contained"
-            disabled={flagEnableButton}
+          <Grid item xs={12} sm={6} md={4} lg={4} xl={4}>
+            <Button
+              disableElevation
+              variant="contained"
+              disabled={flagEnableButton}
+            >
+              FUZZIFICAR
+            </Button>
+          </Grid>
+
+          <Grid
+            item
+            xs={12}
+            sm={12}
+            md={12}
+            lg={12}
+            xl={12}
+            sx={{ height: 400, mt: 4 }}
           >
-            FUZZIFICAR
-          </Button>
+            <Example />
+          </Grid>
         </Grid>
-
-        <Grid
-          item
-          xs={12}
-          sm={12}
-          md={12}
-          lg={12}
-          xl={12}
-          sx={{ height: 400, mt: 4 }}
-        >
-          <Example />
-        </Grid>
-      </Grid>
+      </Paper>
     </Container>
   );
 }
