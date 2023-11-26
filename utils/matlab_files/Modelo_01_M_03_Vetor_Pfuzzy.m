@@ -34,6 +34,7 @@ P0 = [0.7; 0; 0.24; 0.01; 0.6; 0];
 % Controlador fuzzy
 dados_var = readfis('cond_ambiental_THE_1'); 
 % ----------------------------------------------------------------------- %
+
 % Solucao da EDO
 options = odeset('Abstol',1e-6,'Reltol',1e-6);
 [t, P] = ode45(@(t,P) EDO_HVC_Pfuzzy(t,P,dados_var),tspan,P0,options);
