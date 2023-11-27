@@ -36,21 +36,24 @@ mu_f = 5e-2
 
 def EDO_HVC_Pfuzzy(t, P, simulador):
    
-    print('simulador >>>> ', simulador)
+    # print('simulador >>>> ', simulador)
 
     P = np.array(P)
 
     resto = t % 360
+    # print('resto: ', resto)
     if resto < 180:
         tau = resto
+        # print('1 - tau: ', tau)
     else:
         tau = 359 - resto
+        # print('2 - tau: ', tau)
 
     p = P[2] + P[3]   
 
-    print('P >>>>>> ', P)   
-    print('p >>>>>> ', p)   
-    print('tau >>>> ', tau)      
+    # print('P >>>>>> ', P)   
+    # print('p >>>>>> ', p)   
+    # print('tau >>>> ', tau)      
 
     #DATA = [0.7  0.   0.24 0.01 0.6  0.  ]
 
@@ -62,22 +65,22 @@ def EDO_HVC_Pfuzzy(t, P, simulador):
     simulador.compute()
 
     # Obter o valor da variável de saída
-    var = simulador.output['variacao']
-    print('var: ', var)
+    var_value = simulador.output['variacao']
+    print('var: ', var_value)
 
     # Avaliar as funções de pertinência usando scikit-fuzzy
     # var_pertinence = fuzz.interp_membership(universe_flebotomineos, p, 'p')
     # var_pertinence = fuzz.interp_membership(universe_flebotomineos, 'baixo', p)
     # tau_pertinence = fuzz.interp_membership(universe_cond_ambiental, tau, 'tau')
 
-    var_pertinence = fuzz.interp_membership(simulador.input['flebotomineos'].universe, p, simulador.input['flebotomineos'].terms)
-    tau_pertinence = fuzz.interp_membership(simulador.input['cond_ambiental'].universe, tau, simulador.input['cond_ambiental'].terms)
+    #var_pertinence = fuzz.interp_membership(simulador.input['flebotomineos'].universe, p, simulador.input['flebotomineos'].terms)
+    #tau_pertinence = fuzz.interp_membership(simulador.input['cond_ambiental'].universe, tau, simulador.input['cond_ambiental'].terms)
 
     # Calcular o valor usando os graus de pertinência
-    var = fuzz.defuzz(simulador.output['variacao'].universe, var_pertinence, 'centroid')
+    #var = fuzz.defuzz(simulador.output['variacao'].universe, var_pertinence, 'centroid')
 
     # Calcular o valor usando os graus de pertinência
-    var_value = fuzz.defuzz(simulador.ctrl.consequents['variacao'].universe, var_pertinence, 'centroid')
+    #var_value = fuzz.defuzz(simulador.ctrl.consequents['variacao'].universe, var_pertinence, 'centroid')
 
     dPdt = [
         r_h * (P[0] + P[1]) * (1 - (P[0] + P[1]) / k_h) - alpha_h * P[0] * (P[3] / (P[2] + P[3])) + gamma_h * P[1] - mu_h * P[0],
@@ -87,5 +90,7 @@ def EDO_HVC_Pfuzzy(t, P, simulador):
         r_c * P[4] * (1 - (P[4] + P[5]) / k_c) - alpha_c * P[4] * (P[3] / (P[2] + P[3])) - mu_c * P[4],
         alpha_c * P[4] * (P[3] / (P[2] + P[3])) - (mu_c + d_c) * P[5]
     ]
+
+    print('dPdt: ',dPdt)
 
     return dPdt
