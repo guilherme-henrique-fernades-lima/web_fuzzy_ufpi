@@ -14,7 +14,6 @@ flebotomineos = ctrl.Antecedent(np.linspace(0, 1, 1000), 'flebotomineos')
 cond_ambiental = ctrl.Antecedent(np.linspace(0, 180, 1000), 'cond_ambiental') 
 variacao = ctrl.Consequent(np.linspace(-0.0015, 0.0015, 1000), 'variacao') 
 
-
 # Funções de pertinência para 'Flebotomineos'
 flebotomineos['baixo'] = fuzz.trapmf(flebotomineos.universe, [-2, -0.25, 0.1, 0.3022])
 flebotomineos['medio_baixo'] = fuzz.trimf(flebotomineos.universe, [0.1, 0.3, 0.55])
@@ -37,7 +36,7 @@ variacao['medio_negativo'] = fuzz.trimf(variacao.universe, [-0.001125, -0.00075,
 variacao['alto_negativo'] = fuzz.trapmf(variacao.universe, [-0.02, -0.0015, -0.001125, -0.00075])
 
 
-# Visualizando as funções de pertinência para cada variável
+# Descomentar caso queria visualizar as funções de pertinência para cada variável
 # flebotominios.view()
 # cond_ambiental.view()
 # variacao.view()
@@ -67,33 +66,27 @@ rule18 = ctrl.Rule(flebotomineos['muito_alto'] & cond_ambiental['favoravel'], va
 dados_var = ctrl.ControlSystem([rule1, rule2, rule3, rule4, rule5, rule6, rule7, rule8, rule9, rule10, rule11, rule12, rule13, rule14, rule15, rule16, rule17, rule18])
 simulador = ctrl.ControlSystemSimulation(dados_var)
 
-# validade_simulador.input['flebotomineos'] = 2
-# validade_simulador.input['cond_ambiental'] = 120 
-
-# Computando o resultado (Inferência Fuzzy + Defuzzificação)
-# validade_simulador.compute()
-
-#print('A variacao é de %d dias' % round(validade_simulador.output['variacao']))
-
-# Visualizando as regiões
-# flebotomineos.view(sim=validade_simulador)
-# cond_ambiental.view(sim=validade_simulador)
-# variacao.view(sim=validade_simulador)
-
+# Condições iniciais
 initial_conditions = [0.7, 0, 0.24, 0.01, 0.6, 0]
 
-#Método Runge-Kutta
-# Solucao da EDO
-# options = odeset('Abstol',1e-6,'Reltol',1e-6);
-# Agora, chame solve_ivp passando validade_simulador como argumento
+options = {'atol': 1e-6, 'rtol': 1e-6}
+# Agora, chame solve_ivp passando simulador como argumento
 solution = solve_ivp(fun=lambda t, P: EDO_HVC_Pfuzzy(t, P, simulador),
                      t_span=(tspan[0], tspan[-1]),
                      y0=initial_conditions,
                      t_eval=tspan,
                      args=(),
-                     method='RK45',
-                     vectorized=False)
+                     method='RK45', #Método Runge-Kutta
+                     vectorized=False,
+                     #options=options
+                     )
 
 # # Obter os resultados
-# t = solution.t
-# P = solution.y.T 
+t = solution.t
+P = solution.y.T 
+
+print(P)
+
+print(len(P))
+
+
