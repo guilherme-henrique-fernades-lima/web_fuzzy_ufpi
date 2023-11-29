@@ -1,4 +1,4 @@
-import React, { useState, PureComponent } from "react";
+import React, { useState, useEffect } from "react";
 import {
   LineChart,
   Line,
@@ -18,50 +18,62 @@ import Paper from "@mui/material/Paper";
 
 const data = [
   {
-    name: "Page A",
-    uv: 4000,
-    pv: 2400,
-    amt: 2400,
+    name: "p1",
+    humanos_suscetiveis: 244,
+    humanos_infectados: 1333,
+    flebotomineos_suscetiveis: 100,
+    flebotomineos_infectados: 333,
+    caes_suscetiveis: 533,
+    caes_infectados: 2333,
   },
   {
-    name: "Page B",
-    uv: 3000,
-    pv: 1398,
-    amt: 2210,
+    name: "p2",
+    humanos_suscetiveis: 244,
+    humanos_infectados: 1333,
+    flebotomineos_suscetiveis: 100,
+    flebotomineos_infectados: 333,
+    caes_suscetiveis: 533,
+    caes_infectados: 2333,
   },
   {
-    name: "Page C",
-    uv: 2000,
-    pv: 9800,
-    amt: 2290,
+    name: "p3",
+    humanos_suscetiveis: 244,
+    humanos_infectados: 1333,
+    flebotomineos_suscetiveis: 100,
+    flebotomineos_infectados: 333,
+    caes_suscetiveis: 533,
+    caes_infectados: 2333,
   },
   {
-    name: "Page D",
-    uv: 2780,
-    pv: 3908,
-    amt: 2000,
+    name: "p4",
+    humanos_suscetiveis: 244,
+    humanos_infectados: 1333,
+    flebotomineos_suscetiveis: 100,
+    flebotomineos_infectados: 333,
+    caes_suscetiveis: 533,
+    caes_infectados: 2333,
   },
   {
-    name: "Page E",
-    uv: 1890,
-    pv: 4800,
-    amt: 2181,
+    name: "p5",
+    humanos_suscetiveis: 244,
+    humanos_infectados: 1333,
+    flebotomineos_suscetiveis: 100,
+    flebotomineos_infectados: 333,
+    caes_suscetiveis: 533,
+    caes_infectados: 2333,
   },
   {
-    name: "Page F",
-    uv: 2390,
-    pv: 3800,
-    amt: 2500,
-  },
-  {
-    name: "Page G",
-    uv: 3490,
-    pv: 4300,
-    amt: 2100,
+    name: "p6",
+    humanos_suscetiveis: 244,
+    humanos_infectados: 1333,
+    flebotomineos_suscetiveis: 100,
+    flebotomineos_infectados: 333,
+    caes_suscetiveis: 533,
+    caes_infectados: 2333,
   },
 ];
 
-function Example() {
+function PlotGrafico() {
   return (
     <ResponsiveContainer width="100%" height="100%">
       <LineChart
@@ -76,29 +88,102 @@ function Example() {
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" />
-        <YAxis />
-        <Tooltip />
+        <XAxis
+          dataKey="name"
+          label={{
+            value: "Tempo (em dias)",
+          }}
+          tick={false}
+        />
+        <YAxis
+          label={{
+            value: "Densidade Populacional",
+            angle: -90,
+            padding: 20,
+            // position: "insideLeft",
+          }}
+          tick={false}
+        />
+        {/* <Tooltip /> */}
         <Legend />
         <Line
           type="monotone"
-          dataKey="pv"
-          stroke="#8884d8"
-          activeDot={{ r: 8 }}
+          dataKey="humanos_suscetiveis"
+          stroke="#0a22fa"
+          activeDot={{ r: 2 }}
+          dot={false}
+          strokeDasharray="4 4 4"
         />
-        <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
+        <Line
+          type="monotone"
+          dataKey="humanos_infectados"
+          stroke="#0a22fa"
+          dot={false}
+          activeDot={{ r: 2 }}
+        />
+        <Line
+          type="monotone"
+          dataKey="flebotomineos_suscetiveis"
+          stroke="#e31809"
+          activeDot={{ r: 2 }}
+          dot={false}
+          strokeDasharray="4 4 4"
+        />
+        <Line
+          type="monotone"
+          dataKey="flebotomineos_infectados"
+          stroke="#e31809"
+          dot={false}
+          activeDot={{ r: 2 }}
+        />
+        <Line
+          type="monotone"
+          dataKey="caes_suscetiveis"
+          stroke="#000"
+          activeDot={{ r: 2 }}
+          dot={false}
+          strokeDasharray="4 4 4"
+        />
+        <Line
+          type="monotone"
+          dataKey="caes_infectados"
+          stroke="#000"
+          activeDot={{ r: 2 }}
+          dot={false}
+        />
       </LineChart>
     </ResponsiveContainer>
   );
 }
 
 export default function MainPage() {
+  const [P, setP] = useState();
   const [humanosSuscetiveis, setHumanosSuscetiveis] = useState(0.7);
   const [humanosInfectados, setHumanosInfectados] = useState(0);
-  const [vetoresSuscetiveis, setVetoresSuscetiveis] = useState(0.24);
-  const [vetoresInfectados, setVetoresInfectados] = useState(0.01);
+  const [flebotomineosSuscetiveis, setFlebotomineosSuscetiveis] =
+    useState(0.24);
+  const [flebotomineosInfectados, setFlebotomineosInfectados] = useState(0.01);
   const [caesSuscetiveis, setCaesSuscetiveis] = useState(0.6);
   const [caesInfectados, setCaesInfectados] = useState(0);
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  async function loadData() {
+    const res = await fetch(`/api/fuzzy`, {
+      method: "GET",
+      // headers: {
+      //   "X-Requested-With": "XMLHttpRequest",
+      //   "Content-Type": "application/json;charset=UTF-8",
+      // },
+    });
+
+    if (res.ok) {
+      const json = await res.json();
+      setP(json);
+    }
+  }
 
   //data [0.7, 0, 0.24, 0.01, 0.6, 0];
 
@@ -106,8 +191,8 @@ export default function MainPage() {
     if (
       humanosSuscetiveis &&
       humanosInfectados &&
-      vetoresSuscetiveis &&
-      vetoresInfectados &&
+      flebotomineosSuscetiveis &&
+      flebotomineosInfectados &&
       caesSuscetiveis &&
       caesInfectados
     ) {
@@ -163,10 +248,10 @@ export default function MainPage() {
 
           <Grid item xs={12} sm={6} md={4} lg={4} xl={4}>
             <TextField
-              value={vetoresSuscetiveis}
-              onChange={(e) => setVetoresSuscetiveis(e.target.value)}
+              value={flebotomineosSuscetiveis}
+              onChange={(e) => setFlebotomineosSuscetiveis(e.target.value)}
               size="small"
-              label="Vetores flebotomíneos suscetíveis"
+              label="Flebotomíneos suscetíveis"
               autoComplete="off"
               fullWidth
               InputProps={{
@@ -182,8 +267,8 @@ export default function MainPage() {
 
           <Grid item xs={12} sm={6} md={4} lg={4} xl={4}>
             <TextField
-              value={vetoresInfectados}
-              onChange={(e) => setVetoresInfectados(e.target.value)}
+              value={flebotomineosInfectados}
+              onChange={(e) => setFlebotomineosInfectados(e.target.value)}
               size="small"
               label="Vetores flebotomíneos infectados"
               autoComplete="off"
@@ -256,7 +341,7 @@ export default function MainPage() {
             xl={12}
             sx={{ height: 400, mt: 4 }}
           >
-            <Example />
+            <PlotGrafico />
           </Grid>
         </Grid>
       </Paper>

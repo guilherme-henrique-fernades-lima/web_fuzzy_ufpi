@@ -1,4 +1,0 @@
-pip install scipy
-pip install -U scikit-fuzzy
-pip install setuptools
-pip install wheel
