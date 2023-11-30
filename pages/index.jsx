@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import {
   LineChart,
   Line,
@@ -22,6 +22,10 @@ import Paper from "@mui/material/Paper";
 import Tooltip from "@mui/material/Tooltip";
 import Skeleton from "@mui/material/Skeleton";
 import Switch from "@mui/material/Switch";
+import LoadingButton from "@mui/lab/LoadingButton";
+
+//Icons
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 function PlotGrafico(props) {
   const CustomTooltip = ({ active, payload, label }) => {
@@ -36,6 +40,7 @@ function PlotGrafico(props) {
             justifyContent: "flex-start",
             flexDirection: "column",
             boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+            borderRadius: "2px",
           }}
         >
           <Stack direction="row" spacing={1}>
@@ -171,7 +176,7 @@ function PlotGrafico(props) {
           type="monotone"
           dataKey="humanos_suscetiveis"
           isAnimationActive={false}
-          stroke="#0a22fa"
+          stroke="#0a7afa"
           activeDot={{ r: 2 }}
           dot={false}
           strokeDasharray="4 4 4"
@@ -180,7 +185,7 @@ function PlotGrafico(props) {
           type="monotone"
           dataKey="humanos_infectados"
           isAnimationActive={false}
-          stroke="#0a22fa"
+          stroke="#0a7afa"
           dot={false}
           activeDot={{ r: 2 }}
         />
@@ -188,7 +193,7 @@ function PlotGrafico(props) {
           type="monotone"
           dataKey="flebotomineos_suscetiveis"
           isAnimationActive={false}
-          stroke="#e31809"
+          stroke="#ff1100"
           activeDot={{ r: 2 }}
           dot={false}
           strokeDasharray="4 4 4"
@@ -197,7 +202,7 @@ function PlotGrafico(props) {
           type="monotone"
           dataKey="flebotomineos_infectados"
           isAnimationActive={false}
-          stroke="#e31809"
+          stroke="#ff1100"
           dot={false}
           activeDot={{ r: 2 }}
         />
@@ -228,7 +233,7 @@ const NumberTextField = ({ label, value, onChange }) => {
     <Grid item xs={12} sm={6} md={4} lg={4} xl={4}>
       <TextField
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) => onChange(e)}
         size="small"
         label={label}
         autoComplete="off"
@@ -237,9 +242,6 @@ const NumberTextField = ({ label, value, onChange }) => {
           style: {
             borderRadius: "2px",
           },
-          onInput: (e) => {
-            e.target.value = e.target.value.replace(/[^0-9.]/g, "");
-          },
         }}
       />
     </Grid>
@@ -247,21 +249,22 @@ const NumberTextField = ({ label, value, onChange }) => {
 };
 
 export default function MainPage() {
+  //Dados retornados pela API
   const [dashData, setDashData] = useState([]);
 
-  const [humanosSuscetiveis, setHumanosSuscetiveis] = useState(0.7);
-  const [humanosInfectados, setHumanosInfectados] = useState(0);
+  //Estados com as variáveis para 'fuzzificação'
+  const [humanosSuscetiveis, setHumanosSuscetiveis] = useState("0.7");
+  const [humanosInfectados, setHumanosInfectados] = useState("0");
   const [flebotomineosSuscetiveis, setFlebotomineosSuscetiveis] =
-    useState(0.24);
-  const [flebotomineosInfectados, setFlebotomineosInfectados] = useState(0.01);
-  const [caesSuscetiveis, setCaesSuscetiveis] = useState(0.6);
-  const [caesInfectados, setCaesInfectados] = useState(0);
+    useState("0.24");
+  const [flebotomineosInfectados, setFlebotomineosInfectados] =
+    useState("0.01");
+  const [caesSuscetiveis, setCaesSuscetiveis] = useState("0.6");
+  const [caesInfectados, setCaesInfectados] = useState("0");
 
+  //Flags para controle de UI
   const [showTooltip, setShowTooltip] = useState(false);
-
-  useEffect(() => {
-    loadData();
-  }, []);
+  const [loading, setLoading] = useState(false);
 
   const data = useMemo(() => {
     if (dashData) {
@@ -280,165 +283,84 @@ export default function MainPage() {
   }, [dashData]);
 
   async function loadData() {
-    const res = await fetch(`/api/fuzzy`, {
-      method: "GET",
-    });
+    setLoading(true);
 
-    if (res.ok) {
-      const json = await res.json();
-      setDashData(json);
+    try {
+      const res = await fetch(
+        `/api/fuzzy/?humanos_suscetiveis=${humanosSuscetiveis}&humanos_infectados=${humanosInfectados}&flebotomineos_suscetiveis=${flebotomineosSuscetiveis}&flebotomineos_infectados=${flebotomineosInfectados}&caes_suscetiveis=${caesSuscetiveis}&caes_infectados=${caesInfectados}`,
+        {
+          method: "GET",
+        }
+      );
+
+      if (res.ok) {
+        const json = await res.json();
+        setDashData(json);
+        setLoading(false);
+      }
+    } catch (e) {
+      console.log("Erro: ", e);
+    } finally {
+      setLoading(false);
     }
   }
 
-  const handleInputChange = (value, setStateFunction) => {
-    // Verificar se o valor inserido é um número ou contém apenas um ponto
-    if (/^\d*\.?\d*$/.test(value)) {
-      setStateFunction(parseFloat(value));
+  const handleInputChange = (e, setStateFunction) => {
+    // Substitui tudo que não for número ou ponto por uma string vazia
+    let sanitizedValue = e.target.value.replace(/[^0-9.,]/g, "");
+    // Se a vírgula estiver no final, substitua por ponto
+    sanitizedValue = sanitizedValue.replace(",", ".");
+    // Garante que exista apenas um ponto decimal
+    const dots = sanitizedValue.split(".").length - 1;
+    if (dots <= 1) {
+      setStateFunction(sanitizedValue);
     }
   };
 
-  console.log("humanosSuscetiveis: ", humanosSuscetiveis);
-  console.log("humanosInfectados: ", humanosInfectados);
-  console.log("flebotomineosSuscetiveis: ", flebotomineosSuscetiveis);
-  console.log("flebotomineosInfectados: ", flebotomineosInfectados);
-  console.log("caesSuscetiveis: ", caesSuscetiveis);
-  console.log("caesInfectados: ", caesInfectados);
-
   function enableButton() {
+    // A função agora verifica se todos os valores são undefined, vazios ou contêm apenas espaços ou apenas "."
     if (
-      humanosSuscetiveis &&
-      humanosInfectados &&
-      flebotomineosSuscetiveis &&
-      flebotomineosInfectados &&
-      caesSuscetiveis &&
-      caesInfectados
+      humanosSuscetiveis === undefined ||
+      humanosSuscetiveis.trim() === "" ||
+      humanosSuscetiveis.trim() === "." ||
+      humanosInfectados === undefined ||
+      humanosInfectados.trim() === "" ||
+      humanosInfectados.trim() === "." ||
+      flebotomineosSuscetiveis === undefined ||
+      flebotomineosSuscetiveis.trim() === "" ||
+      flebotomineosSuscetiveis.trim() === "." ||
+      flebotomineosInfectados === undefined ||
+      flebotomineosInfectados.trim() === "" ||
+      flebotomineosInfectados.trim() === "." ||
+      caesSuscetiveis === undefined ||
+      caesSuscetiveis.trim() === "" ||
+      caesSuscetiveis.trim() === "." ||
+      caesInfectados === undefined ||
+      caesInfectados.trim() === "" ||
+      caesInfectados.trim() === "."
     ) {
-      return false;
-    } else {
       return true;
+    } else {
+      return false;
     }
   }
 
   const flagEnableButton = enableButton();
 
+  function cleanDisplayData() {
+    setHumanosSuscetiveis("");
+    setHumanosInfectados("");
+    setFlebotomineosSuscetiveis("");
+    setFlebotomineosInfectados("");
+    setCaesSuscetiveis("");
+    setCaesInfectados("");
+    setDashData([]);
+  }
+
   return (
     <Container disableGutters>
       <Paper elevation={24} sx={{ p: 2 }}>
         <Grid container spacing={1}>
-          {/* <Grid item xs={12} sm={6} md={4} lg={4} xl={4}>
-            <TextField
-              value={humanosSuscetiveis}
-              onChange={(e) => setHumanosSuscetiveis(e.target.value)}
-              size="small"
-              label="Humanos suscetíveis"
-              autoComplete="off"
-              fullWidth
-              InputProps={{
-                style: {
-                  borderRadius: "2px",
-                },
-                onInput: (e) => {
-                  e.target.value = e.target.value.replace(/[^0-9]/g, "");
-                },
-              }}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={6} md={4} lg={4} xl={4}>
-            <TextField
-              value={humanosInfectados}
-              onChange={(e) => setHumanosInfectados(e.target.value)}
-              size="small"
-              label="Humanos infectados"
-              autoComplete="off"
-              fullWidth
-              InputProps={{
-                style: {
-                  borderRadius: "2px",
-                },
-                onInput: (e) => {
-                  e.target.value = e.target.value.replace(/[^0-9]/g, "");
-                },
-              }}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={6} md={4} lg={4} xl={4}>
-            <TextField
-              value={flebotomineosSuscetiveis}
-              onChange={(e) => setFlebotomineosSuscetiveis(e.target.value)}
-              size="small"
-              label="Flebotomíneos suscetíveis"
-              autoComplete="off"
-              fullWidth
-              InputProps={{
-                style: {
-                  borderRadius: "2px",
-                },
-                onInput: (e) => {
-                  e.target.value = e.target.value.replace(/[^0-9]/g, "");
-                },
-              }}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={6} md={4} lg={4} xl={4}>
-            <TextField
-              value={flebotomineosInfectados}
-              onChange={(e) => setFlebotomineosInfectados(e.target.value)}
-              size="small"
-              label="Vetores flebotomíneos infectados"
-              autoComplete="off"
-              fullWidth
-              InputProps={{
-                style: {
-                  borderRadius: "2px",
-                },
-                onInput: (e) => {
-                  e.target.value = e.target.value.replace(/[^0-9]/g, "");
-                },
-              }}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={6} md={4} lg={4} xl={4}>
-            <TextField
-              value={caesSuscetiveis}
-              onChange={(e) => setCaesSuscetiveis(e.target.value)}
-              size="small"
-              label="Cães suscetíveis"
-              autoComplete="off"
-              fullWidth
-              InputProps={{
-                style: {
-                  borderRadius: "2px",
-                },
-                onInput: (e) => {
-                  e.target.value = e.target.value.replace(/[^0-9]/g, "");
-                },
-              }}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={6} md={4} lg={4} xl={4}>
-            <TextField
-              value={caesInfectados}
-              onChange={(e) => setCaesInfectados(e.target.value)}
-              size="small"
-              label="Cães infectados"
-              autoComplete="off"
-              fullWidth
-              InputProps={{
-                style: {
-                  borderRadius: "2px",
-                },
-                onInput: (e) => {
-                  e.target.value = e.target.value.replace(/[^0-9]/g, "");
-                },
-              }}
-            />
-          </Grid> */}
-
           <NumberTextField
             label="Humanos suscetíveis"
             value={humanosSuscetiveis}
@@ -475,17 +397,6 @@ export default function MainPage() {
             value={caesInfectados}
             onChange={(value) => handleInputChange(value, setCaesInfectados)}
           />
-
-          <Grid item xs={12} sm={6} md={4} lg={4} xl={4}>
-            <Button
-              disableElevation
-              variant="contained"
-              disabled={flagEnableButton}
-            >
-              Computar dados
-            </Button>
-          </Grid>
-
           <Grid
             item
             xs={12}
@@ -496,37 +407,80 @@ export default function MainPage() {
             sx={{
               display: "flex",
               alignItems: "center",
-              justifyContent: "flex-end",
+              justifyContent: "flex-start",
               flexDirection: "row",
-              width: "100%",
             }}
           >
-            <Tooltip placement="top" title="Exibir detalhes">
-              <Switch
-                checked={showTooltip}
-                onChange={() => {
-                  setShowTooltip((showTooltip) => !showTooltip);
-                }}
-                sx={{ mb: 1 }}
-              />
-            </Tooltip>
-          </Grid>
+            <LoadingButton
+              loading={loading}
+              disableElevation
+              variant="contained"
+              disabled={flagEnableButton}
+              onClick={loadData}
+              sx={{ textTransform: "unset ! important", fontWeight: 700 }}
+            >
+              Defuzzyficação
+            </LoadingButton>
 
-          <Grid
-            item
-            xs={12}
-            sm={12}
-            md={12}
-            lg={12}
-            xl={12}
-            sx={{ height: 430, mb: 2 }}
-          >
-            {dashData?.length > 0 ? (
-              <PlotGrafico data={data} showTooltip={showTooltip} />
-            ) : (
-              <Skeleton variant="rectangular" width={"100%"} height={"100%"} />
-            )}
+            <Button
+              disableElevation
+              color="error"
+              sx={{ ml: 1 }}
+              variant="contained"
+              onClick={cleanDisplayData}
+            >
+              <DeleteOutlineIcon />
+            </Button>
           </Grid>
+          {dashData?.length != 0 && (
+            <>
+              <Grid
+                item
+                xs={12}
+                sm={12}
+                md={12}
+                lg={12}
+                xl={12}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-end",
+                  flexDirection: "row",
+                  width: "100%",
+                }}
+              >
+                <Tooltip placement="top" title="Exibir detalhes">
+                  <Switch
+                    checked={showTooltip}
+                    onChange={() => {
+                      setShowTooltip((showTooltip) => !showTooltip);
+                    }}
+                    sx={{ mb: 1 }}
+                  />
+                </Tooltip>
+              </Grid>
+
+              <Grid
+                item
+                xs={12}
+                sm={12}
+                md={12}
+                lg={12}
+                xl={12}
+                sx={{ height: 430, mb: 2 }}
+              >
+                {dashData?.length > 0 ? (
+                  <PlotGrafico data={data} showTooltip={showTooltip} />
+                ) : (
+                  <Skeleton
+                    variant="rectangular"
+                    width={"100%"}
+                    height={"100%"}
+                  />
+                )}
+              </Grid>
+            </>
+          )}
         </Grid>
       </Paper>
     </Container>

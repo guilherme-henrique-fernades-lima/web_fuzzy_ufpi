@@ -1,10 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/router";
-import Link from "next/link";
-import Image from "next/image";
-
-//Third libraries
-import { signOut, useSession } from "next-auth/react";
 
 //Mui components
 import AppBar from "@mui/material/AppBar";
@@ -94,7 +88,7 @@ function ButtonGoTopTop() {
           width: { xs: 45, sm: 50, md: 55 },
           height: { xs: 45, sm: 50, md: 55 },
           borderRadius: "50%",
-          backgroundColor: "#e60014",
+          backgroundColor: "#232323",
           border: "1px solid #ccc",
           position: "fixed",
           bottom: 20,
@@ -105,7 +99,7 @@ function ButtonGoTopTop() {
           cursor: "pointer",
           zIndex: 20,
           "&:hover": {
-            backgroundColor: "#be0414",
+            backgroundColor: "#464646",
           },
         }}
       >
@@ -118,7 +112,6 @@ function ButtonGoTopTop() {
 }
 
 export default function Layout(props) {
-  const router = useRouter();
   const { children, window } = props;
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -134,13 +127,6 @@ export default function Layout(props) {
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
-  };
-
-  const handleLogout = async () => {
-    const logout = await signOut({
-      redirect: true,
-      callbackUrl: "/auth/login",
-    });
   };
 
   const drawer = (
