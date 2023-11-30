@@ -23,9 +23,11 @@ import Tooltip from "@mui/material/Tooltip";
 import Skeleton from "@mui/material/Skeleton";
 import Switch from "@mui/material/Switch";
 import LoadingButton from "@mui/lab/LoadingButton";
+import Slider from "@mui/material/Slider";
 
 //Icons
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import TipsAndUpdatesOutlinedIcon from "@mui/icons-material/TipsAndUpdatesOutlined";
 
 function PlotGrafico(props) {
   const CustomTooltip = ({ active, payload, label }) => {
@@ -126,8 +128,8 @@ function PlotGrafico(props) {
     return null;
   };
 
-  return (
-    <ResponsiveContainer width="100%" height="100%">
+  const memoizedChart = useMemo(() => {
+    return (
       <LineChart
         width={500}
         height={300}
@@ -224,6 +226,12 @@ function PlotGrafico(props) {
           dot={false}
         />
       </LineChart>
+    );
+  }, [props.data, props.showTooltip]);
+
+  return (
+    <ResponsiveContainer width="100%" height="100%">
+      {memoizedChart}
     </ResponsiveContainer>
   );
 }
@@ -261,6 +269,7 @@ export default function MainPage() {
     useState("0.01");
   const [caesSuscetiveis, setCaesSuscetiveis] = useState("0.6");
   const [caesInfectados, setCaesInfectados] = useState("0");
+  const [tempo, setTempo] = useState(5);
 
   //Flags para controle de UI
   const [showTooltip, setShowTooltip] = useState(false);
@@ -287,7 +296,7 @@ export default function MainPage() {
 
     try {
       const res = await fetch(
-        `/api/fuzzy/?humanos_suscetiveis=${humanosSuscetiveis}&humanos_infectados=${humanosInfectados}&flebotomineos_suscetiveis=${flebotomineosSuscetiveis}&flebotomineos_infectados=${flebotomineosInfectados}&caes_suscetiveis=${caesSuscetiveis}&caes_infectados=${caesInfectados}`,
+        `/api/fuzzy/?tempo=${tempo}&humanos_suscetiveis=${humanosSuscetiveis}&humanos_infectados=${humanosInfectados}&flebotomineos_suscetiveis=${flebotomineosSuscetiveis}&flebotomineos_infectados=${flebotomineosInfectados}&caes_suscetiveis=${caesSuscetiveis}&caes_infectados=${caesInfectados}`,
         {
           method: "GET",
         }
@@ -357,6 +366,16 @@ export default function MainPage() {
     setDashData([]);
   }
 
+  function fillInitialCondition() {
+    setHumanosSuscetiveis("0.7");
+    setHumanosInfectados("0");
+    setFlebotomineosSuscetiveis("0.24");
+    setFlebotomineosInfectados("0.01");
+    setCaesSuscetiveis("0.6");
+    setCaesInfectados("0");
+    setTempo(5);
+  }
+
   return (
     <Container disableGutters>
       <Paper elevation={24} sx={{ p: 2 }}>
@@ -397,6 +416,30 @@ export default function MainPage() {
             value={caesInfectados}
             onChange={(value) => handleInputChange(value, setCaesInfectados)}
           />
+
+          <Grid item xs={12}>
+            <Typography
+              sx={{
+                color: "#242424",
+                fontSize: { xs: 12, sm: 14, md: 16 },
+                fontWeight: 700,
+                mt: 1,
+              }}
+            >
+              Tempo (Em anos) {tempo}
+            </Typography>
+            <Slider
+              value={tempo}
+              valueLabelDisplay="auto"
+              step={1}
+              marks
+              min={1}
+              max={10}
+              onChange={(event, newValue) => {
+                setTempo(newValue);
+              }}
+            />
+          </Grid>
           <Grid
             item
             xs={12}
@@ -421,16 +464,31 @@ export default function MainPage() {
             >
               Defuzzyficação
             </LoadingButton>
-
-            <Button
-              disableElevation
-              color="error"
-              sx={{ ml: 1 }}
-              variant="contained"
-              onClick={cleanDisplayData}
+            <Tooltip
+              placement="top"
+              title="Preencher com condição inicial padrão"
             >
-              <DeleteOutlineIcon />
-            </Button>
+              <Button
+                disableElevation
+                sx={{ ml: 1 }}
+                variant="contained"
+                onClick={fillInitialCondition}
+              >
+                <TipsAndUpdatesOutlinedIcon />
+              </Button>
+            </Tooltip>
+
+            <Tooltip placement="top" title="Apagar dados">
+              <Button
+                disableElevation
+                sx={{ ml: 1 }}
+                color="error"
+                variant="contained"
+                onClick={cleanDisplayData}
+              >
+                <DeleteOutlineIcon />
+              </Button>
+            </Tooltip>
           </Grid>
           {dashData?.length != 0 && (
             <>

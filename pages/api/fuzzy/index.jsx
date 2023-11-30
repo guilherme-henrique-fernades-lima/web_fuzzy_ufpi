@@ -5,9 +5,10 @@ async function getFuzzysetResult(req, res) {
   const flebotomineosInfectados = req.query.flebotomineos_infectados;
   const caesSuscetiveis = req.query.caes_suscetiveis;
   const caesInfectados = req.query.caes_infectados;
+  const tempo = req.query.tempo;
 
   const response = await fetch(
-    `${process.env.NEXT_URL_BACKEND}/fuzzy/?humanos_suscetiveis=${humanosSuscetiveis}&humanos_infectados=${humanosInfectados}&flebotomineos_suscetiveis=${flebotomineosSuscetiveis}&flebotomineos_infectados=${flebotomineosInfectados}&caes_suscetiveis=${caesSuscetiveis}&caes_infectados=${caesInfectados}`,
+    `${process.env.NEXT_URL_BACKEND}/fuzzy/?tempo=${tempo}&humanos_suscetiveis=${humanosSuscetiveis}&humanos_infectados=${humanosInfectados}&flebotomineos_suscetiveis=${flebotomineosSuscetiveis}&flebotomineos_infectados=${flebotomineosInfectados}&caes_suscetiveis=${caesSuscetiveis}&caes_infectados=${caesInfectados}`,
     {
       method: "GET",
       headers: {
