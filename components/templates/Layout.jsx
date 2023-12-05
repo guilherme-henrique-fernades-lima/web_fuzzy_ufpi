@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 
 //Mui components
 import AppBar from "@mui/material/AppBar";
@@ -164,19 +165,27 @@ export default function Layout(props) {
           sx={{
             display: "flex",
             alignItems: "center",
-            justifyContent: "space-between",
+            justifyContent: "flex-start",
             paddingLeft: { xs: "20px", md: "30px" },
             paddingRight: { xs: "20px", md: "70px" },
           }}
         >
+          <Image src="/img/logo_1.png" width={70} height={60} />
+          <Image
+            src="/img/logo_2.jpeg"
+            width={80}
+            height={40}
+            style={{ borderRadius: "2px" }}
+          />
           <Typography
             variant="h3"
             sx={{
               fontSize: { xs: 14, sm: 16, md: 16, lg: 18 },
-              fontWeight: 700,
+              fontWeight: 400,
+              ml: 1,
             }}
           >
-            UFPI - Sistema Fuzzy
+            Universidade Federal do Piauí
           </Typography>
         </Toolbar>
       </AppBar>
@@ -255,14 +264,35 @@ function FooterPage(props) {
           backgroundColor: "#ECECEC",
           display: "flex",
           alignItems: "center",
-          justifyContent: "center",
+          justifyContent: "space-between",
+          pl: 3,
+          pr: 3,
+          flexDirection: { xs: "column", sm: "column", md: "row" },
         }}
       >
         <Typography
           variant="p"
-          sx={{ fontSize: 12, color: "#232323", textAlign: "center" }}
+          sx={{
+            fontSize: { xs: 14, sm: 14, md: 16 },
+            color: "#232323",
+            textAlign: { xs: "center", sm: "center", md: "left" },
+            span: { fontWeight: 700 },
+            mb: { xs: 1, sm: 1, md: 0 },
+          }}
         >
-          UFPI
+          <span>Doutorando:</span> Everaldo Araújo Ferreira
+        </Typography>
+        <Typography
+          variant="p"
+          sx={{
+            fontSize: { xs: 14, sm: 14, md: 16 },
+            color: "#232323",
+            textAlign: { xs: "center", sm: "center", md: "right" },
+            span: { fontWeight: 700 },
+          }}
+        >
+          Programa de Pós-Graduação em Tecnologias Aplicadas a Animais de
+          Interesse Regional - <span>PPGTAIR</span>
         </Typography>
       </Box>
     </Box>

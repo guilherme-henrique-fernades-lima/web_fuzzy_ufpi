@@ -157,7 +157,11 @@ function PlotGrafico(props) {
             value="Tempo (em dias)"
           />
         </XAxis>
-        <YAxis tickCount={11} domain={[0, 1]}>
+        <YAxis
+          tickCount={11}
+          domain={[0, 1]}
+          tickFormatter={(tick) => tick.toFixed(1)}
+        >
           <Label
             style={{
               angle: -90,
@@ -238,7 +242,7 @@ function PlotGrafico(props) {
 
 const NumberTextField = ({ label, value, onChange }) => {
   return (
-    <Grid item xs={12} sm={6} md={4} lg={4} xl={4}>
+    <Grid item xs={12} sm={6} md={6} lg={6} xl={6}>
       <TextField
         value={value}
         onChange={(e) => onChange(e)}
@@ -400,7 +404,7 @@ export default function MainPage() {
             }
           />
           <NumberTextField
-            label="Vetores flebotomíneos infectados"
+            label="Flebotomíneos infectados"
             value={flebotomineosInfectados}
             onChange={(value) =>
               handleInputChange(value, setFlebotomineosInfectados)
