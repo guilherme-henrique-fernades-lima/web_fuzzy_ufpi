@@ -270,18 +270,51 @@ function FooterPage(props) {
           flexDirection: { xs: "column", sm: "column", md: "row" },
         }}
       >
-        <Typography
-          variant="p"
+        <Box
           sx={{
-            fontSize: { xs: 14, sm: 14, md: 16 },
-            color: "#232323",
-            textAlign: { xs: "center", sm: "center", md: "left" },
-            span: { fontWeight: 700 },
-            mb: { xs: 1, sm: 1, md: 0 },
+            display: "flex",
+            alignItems: "flex-start",
+            justifyContent: "center",
+            flexDirection: "column",
           }}
         >
-          <span>Doutorando:</span> Everaldo Araújo Ferreira
-        </Typography>
+          <Typography
+            variant="p"
+            sx={{
+              fontSize: { xs: 14, sm: 14, md: 16 },
+              color: "#232323",
+              textAlign: { xs: "center", sm: "center", md: "left" },
+              span: { fontWeight: 700 },
+              mb: { xs: 1, sm: 1, md: 0 },
+            }}
+          >
+            <span>Doutorando:</span> Everaldo Araújo Ferreira
+          </Typography>
+          <Typography
+            variant="p"
+            sx={{
+              fontSize: { xs: 14, sm: 14, md: 16 },
+              color: "#232323",
+              textAlign: { xs: "center", sm: "center", md: "left" },
+              span: { fontWeight: 700 },
+              mb: { xs: 1, sm: 1, md: 0 },
+            }}
+          >
+            <span>Orientadora:</span> Dra. Maria do Socorro Pires e Cruz
+          </Typography>
+          <Typography
+            variant="p"
+            sx={{
+              fontSize: { xs: 14, sm: 14, md: 16 },
+              color: "#232323",
+              textAlign: { xs: "center", sm: "center", md: "left" },
+              span: { fontWeight: 700 },
+              mb: { xs: 1, sm: 1, md: 0 },
+            }}
+          >
+            <span>Coorientador:</span> Jefferson Cruz dos Santos Leite
+          </Typography>
+        </Box>
         <Typography
           variant="p"
           sx={{
