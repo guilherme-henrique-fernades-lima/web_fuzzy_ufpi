@@ -312,7 +312,7 @@ function FooterPage(props) {
               mb: { xs: 1, sm: 1, md: 0 },
             }}
           >
-            <span>Coorientador:</span> Jefferson Cruz dos Santos Leite
+            <span>Coorientador:</span> Dr. Jefferson Cruz dos Santos Leite
           </Typography>
         </Box>
         <Typography
