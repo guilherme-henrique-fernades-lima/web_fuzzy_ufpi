@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from "react";
+import toast, { Toaster } from "react-hot-toast";
 import {
   LineChart,
   Line,
@@ -310,6 +311,12 @@ export default function MainPage() {
         const json = await res.json();
         setDashData(json);
         setLoading(false);
+        toast.success("Fuzzyficação realizada com sucesso");
+      } else {
+        toast.error(
+          "Erro ao fuzzyficar, verifique os valores do input e tente novamente"
+        );
+        setDashData([]);
       }
     } catch (e) {
       console.log("Erro: ", e);
@@ -368,6 +375,8 @@ export default function MainPage() {
     setCaesSuscetiveis("");
     setCaesInfectados("");
     setDashData([]);
+
+    setLoading(false);
   }
 
   function fillInitialCondition() {
@@ -382,6 +391,7 @@ export default function MainPage() {
 
   return (
     <Container disableGutters>
+      <Toaster position="bottom-center" reverseOrder={false} />
       <Paper elevation={24} sx={{ p: 2 }}>
         <Grid container spacing={1}>
           <NumberTextField
