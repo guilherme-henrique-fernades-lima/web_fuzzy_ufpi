@@ -6,9 +6,13 @@ async function getFuzzysetResult(req, res) {
   const caesSuscetiveis = req.query.caes_suscetiveis;
   const caesInfectados = req.query.caes_infectados;
   const tempo = req.query.tempo;
+  const encoleiramentoCaesSuscetiveis =
+    req.query.encoleiramento_caes_suscetiveis;
+  const encoleiramentoCaesInfectados = req.query.encoleiramento_caes_infectados;
+  const gammaC = req.query.gamma_c;
 
   const response = await fetch(
-    `${process.env.NEXT_URL_BACKEND}/fuzzy/?tempo=${tempo}&humanos_suscetiveis=${humanosSuscetiveis}&humanos_infectados=${humanosInfectados}&flebotomineos_suscetiveis=${flebotomineosSuscetiveis}&flebotomineos_infectados=${flebotomineosInfectados}&caes_suscetiveis=${caesSuscetiveis}&caes_infectados=${caesInfectados}`,
+    `${process.env.NEXT_URL_BACKEND}/fuzzy/?tempo=${tempo}&humanos_suscetiveis=${humanosSuscetiveis}&humanos_infectados=${humanosInfectados}&flebotomineos_suscetiveis=${flebotomineosSuscetiveis}&flebotomineos_infectados=${flebotomineosInfectados}&caes_suscetiveis=${caesSuscetiveis}&caes_infectados=${caesInfectados}&encoleiramento_caes_suscetiveis=${encoleiramentoCaesSuscetiveis}&encoleiramento_caes_infectados=${encoleiramentoCaesInfectados}&gamma_c=${gammaC}`,
     {
       method: "GET",
       headers: {

@@ -1,15 +1,9 @@
-// import { createStyles, makeStyles } from "@material-ui/styles";
-
-//import { createStyles, makeStyles } from "@mui/material/styles";
-
 import { createStyles, makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles(() =>
   createStyles({
     "@global": {
       "*, *::before, *::after, #root": {
-        //fontFamily: "Nunito, sans-serif",
-        // fontFamily: "Open Sans, sans-serif",
         fontFamily: "Montserrat, sans-serif",
         textDecoration: "none",
         boxSizing: "border-box",

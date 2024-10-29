@@ -9,6 +9,7 @@ import {
   Tooltip as TooltipDash,
   ResponsiveContainer,
   Label,
+  Legend,
 } from "recharts";
 
 //Mui components
@@ -25,10 +26,81 @@ import Skeleton from "@mui/material/Skeleton";
 import Switch from "@mui/material/Switch";
 import LoadingButton from "@mui/lab/LoadingButton";
 import Slider from "@mui/material/Slider";
+import FormControlLabel from "@mui/material/FormControlLabel";
 
 //Icons
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import TipsAndUpdatesOutlinedIcon from "@mui/icons-material/TipsAndUpdatesOutlined";
+
+const renderLegend = ({ payload }) => {
+  const entryFormatted = (value) => {
+    switch (value) {
+      case "humanos_suscetiveis":
+        return "Humanos Suscetíveis";
+      case "humanos_infectados":
+        return "Humanos Infectados";
+      case "flebotomineos_suscetiveis":
+        return "Flebotomíneos Suscetíveis";
+      case "flebotomineos_infectados":
+        return "Flebotomíneos Infectados";
+      case "caes_suscetiveis":
+        return "Cães Suscetíveis";
+      case "caes_infectados":
+        return "Cães Infectados";
+      case "encoleirados_suscetiveis":
+        return "Cães encoleirados suscetíveis";
+      case "encoleirados_infectados":
+        return "Cães encoleirados infectados";
+      default:
+        return value;
+    }
+  };
+
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexWrap: "wrap",
+      }}
+    >
+      <ul
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexWrap: "wrap",
+          marginTop: "40px",
+        }}
+      >
+        {payload?.map((entry, index) => (
+          <li
+            key={`item-${index}`}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              marginRight: "20px",
+              color: entry.color,
+            }}
+          >
+            <Box
+              sx={{
+                width: 24,
+                height: 1,
+                marginRight: 1,
+                border: entry.payload.strokeDasharray
+                  ? `1px dashed ${entry.color}`
+                  : `1px solid ${entry.color}`,
+              }}
+            />
+            {entryFormatted(entry.value)}
+          </li>
+        ))}
+      </ul>
+    </Box>
+  );
+};
 
 function PlotGrafico(props) {
   const CustomTooltip = ({ active, payload, label }) => {
@@ -36,14 +108,14 @@ function PlotGrafico(props) {
       return (
         <Box
           sx={{
-            backgroundColor: "#ffffff",
-            padding: "10px",
+            padding: 2,
+            backgroundColor: "#fff",
             display: "flex",
             alignItems: "flex-start",
             justifyContent: "flex-start",
             flexDirection: "column",
-            boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
             borderRadius: "2px",
+            boxShadow: "rgba(0, 0, 0, 0.56) 0px 22px 70px 4px",
           }}
         >
           <Stack direction="row" spacing={1}>
@@ -123,6 +195,30 @@ function PlotGrafico(props) {
           >
             Cães infectados: {payload[0].payload.caes_infectados}
           </Typography>
+
+          <Typography
+            variant="span"
+            sx={{
+              color: "#242424",
+              fontSize: { xs: 12, sm: 14, md: 16 },
+              mt: 1,
+            }}
+          >
+            Cães encoleirados suscetíveis:{" "}
+            {payload[0].payload.encoleirados_suscetiveis}
+          </Typography>
+
+          <Typography
+            variant="span"
+            sx={{
+              color: "#242424",
+              fontSize: { xs: 12, sm: 14, md: 16 },
+              mt: 1,
+            }}
+          >
+            Cães encoleirados infectados:{" "}
+            {payload[0].payload.encoleirados_infectados}
+          </Typography>
         </Box>
       );
     }
@@ -179,14 +275,17 @@ function PlotGrafico(props) {
           <TooltipDash content={CustomTooltip} cursor={{ fill: "#ececec" }} />
         )}
 
+        <Legend content={renderLegend} />
+
         <Line
           type="monotone"
           dataKey="humanos_suscetiveis"
           isAnimationActive={false}
-          stroke="#0a7afa"
+          stroke="#1303ee"
           activeDot={{ r: 2 }}
           dot={false}
           strokeDasharray="4 4 4"
+          strokeWidth={1}
         />
         <Line
           type="monotone"
@@ -195,6 +294,7 @@ function PlotGrafico(props) {
           stroke="#0a7afa"
           dot={false}
           activeDot={{ r: 2 }}
+          strokeWidth={1}
         />
         <Line
           type="monotone"
@@ -204,6 +304,7 @@ function PlotGrafico(props) {
           activeDot={{ r: 2 }}
           dot={false}
           strokeDasharray="4 4 4"
+          strokeWidth={1}
         />
         <Line
           type="monotone"
@@ -212,6 +313,7 @@ function PlotGrafico(props) {
           stroke="#ff1100"
           dot={false}
           activeDot={{ r: 2 }}
+          strokeWidth={1}
         />
         <Line
           type="monotone"
@@ -221,6 +323,7 @@ function PlotGrafico(props) {
           activeDot={{ r: 2 }}
           dot={false}
           strokeDasharray="4 4 4"
+          strokeWidth={1}
         />
         <Line
           type="monotone"
@@ -229,6 +332,28 @@ function PlotGrafico(props) {
           stroke="#000"
           activeDot={{ r: 2 }}
           dot={false}
+          strokeWidth={1}
+        />
+
+        <Line
+          type="monotone"
+          dataKey="encoleirados_suscetiveis"
+          isAnimationActive={false}
+          stroke="#fa01c4"
+          activeDot={{ r: 2 }}
+          dot={false}
+          strokeDasharray="4 4 4"
+          strokeWidth={1}
+        />
+
+        <Line
+          type="monotone"
+          dataKey="encoleirados_infectados"
+          isAnimationActive={false}
+          stroke="#fa01c4"
+          activeDot={{ r: 2 }}
+          dot={false}
+          strokeWidth={1}
         />
       </LineChart>
     );
@@ -256,6 +381,9 @@ const NumberTextField = ({ label, value, onChange }) => {
             borderRadius: "2px",
           },
         }}
+        inputProps={{
+          maxLength: 7,
+        }}
       />
     </Grid>
   );
@@ -274,6 +402,11 @@ export default function MainPage() {
     useState("0.01");
   const [caesSuscetiveis, setCaesSuscetiveis] = useState("0.6");
   const [caesInfectados, setCaesInfectados] = useState("0");
+  const [encoleiramentoCaesSuscetiveis, setEncoleiramentoCaesSuscetiveis] =
+    useState("0");
+  const [encoleiramentoCaesInfectados, setEncoleiramentoCaesInfectados] =
+    useState("0");
+  const [gammaC, setGammaC] = useState("0.001");
   const [tempo, setTempo] = useState(5);
 
   //Flags para controle de UI
@@ -290,6 +423,8 @@ export default function MainPage() {
         flebotomineos_infectados: item[3],
         caes_suscetiveis: item[4],
         caes_infectados: item[5],
+        encoleirados_suscetiveis: item[6],
+        encoleirados_infectados: item[7],
       }));
     } else {
       return [];
@@ -301,7 +436,7 @@ export default function MainPage() {
 
     try {
       const res = await fetch(
-        `/api/fuzzy/?tempo=${tempo}&humanos_suscetiveis=${humanosSuscetiveis}&humanos_infectados=${humanosInfectados}&flebotomineos_suscetiveis=${flebotomineosSuscetiveis}&flebotomineos_infectados=${flebotomineosInfectados}&caes_suscetiveis=${caesSuscetiveis}&caes_infectados=${caesInfectados}`,
+        `/api/fuzzy/?tempo=${tempo}&humanos_suscetiveis=${humanosSuscetiveis}&humanos_infectados=${humanosInfectados}&flebotomineos_suscetiveis=${flebotomineosSuscetiveis}&flebotomineos_infectados=${flebotomineosInfectados}&caes_suscetiveis=${caesSuscetiveis}&caes_infectados=${caesInfectados}&encoleiramento_caes_suscetiveis=${encoleiramentoCaesSuscetiveis}&encoleiramento_caes_infectados=${encoleiramentoCaesInfectados}&gamma_c=${gammaC}`,
         {
           method: "GET",
         }
@@ -357,7 +492,16 @@ export default function MainPage() {
       caesSuscetiveis.trim() === "." ||
       caesInfectados === undefined ||
       caesInfectados.trim() === "" ||
-      caesInfectados.trim() === "."
+      caesInfectados.trim() === "." ||
+      encoleiramentoCaesInfectados === undefined ||
+      encoleiramentoCaesInfectados.trim() === "" ||
+      encoleiramentoCaesInfectados.trim() === "." ||
+      encoleiramentoCaesSuscetiveis === undefined ||
+      encoleiramentoCaesSuscetiveis.trim() === "" ||
+      encoleiramentoCaesSuscetiveis.trim() === "." ||
+      gammaC === undefined ||
+      gammaC.trim() === "" ||
+      gammaC.trim() === "."
     ) {
       return true;
     } else {
@@ -374,8 +518,10 @@ export default function MainPage() {
     setFlebotomineosInfectados("");
     setCaesSuscetiveis("");
     setCaesInfectados("");
+    setEncoleiramentoCaesSuscetiveis("");
+    setEncoleiramentoCaesInfectados("");
+    setGammaC("");
     setDashData([]);
-
     setLoading(false);
   }
 
@@ -386,6 +532,9 @@ export default function MainPage() {
     setFlebotomineosInfectados("0.01");
     setCaesSuscetiveis("0.6");
     setCaesInfectados("0");
+    setEncoleiramentoCaesSuscetiveis("0");
+    setEncoleiramentoCaesInfectados("0");
+    setGammaC("0.001");
     setTempo(5);
   }
 
@@ -431,6 +580,28 @@ export default function MainPage() {
             onChange={(value) => handleInputChange(value, setCaesInfectados)}
           />
 
+          <NumberTextField
+            label="Encoleiramento de cães suscetíveis"
+            value={encoleiramentoCaesSuscetiveis}
+            onChange={(value) =>
+              handleInputChange(value, setEncoleiramentoCaesSuscetiveis)
+            }
+          />
+
+          <NumberTextField
+            label="Encoleiramento de cães infectados"
+            value={encoleiramentoCaesInfectados}
+            onChange={(value) =>
+              handleInputChange(value, setEncoleiramentoCaesInfectados)
+            }
+          />
+
+          <NumberTextField
+            label="Gamma C"
+            value={gammaC}
+            onChange={(value) => handleInputChange(value, setGammaC)}
+          />
+
           <Grid item xs={12}>
             <Typography
               sx={{
@@ -448,7 +619,7 @@ export default function MainPage() {
               step={1}
               marks
               min={1}
-              max={10}
+              max={15}
               onChange={(event, newValue) => {
                 setTempo(newValue);
               }}
@@ -521,15 +692,18 @@ export default function MainPage() {
                   width: "100%",
                 }}
               >
-                <Tooltip placement="top" title="Exibir detalhes">
-                  <Switch
-                    checked={showTooltip}
-                    onChange={() => {
-                      setShowTooltip((showTooltip) => !showTooltip);
-                    }}
-                    sx={{ mb: 1 }}
-                  />
-                </Tooltip>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={showTooltip}
+                      onChange={() => {
+                        setShowTooltip((state) => !state);
+                      }}
+                    />
+                  }
+                  label="Exibir detalhes"
+                  labelPlacement="start"
+                />
               </Grid>
 
               <Grid
@@ -539,7 +713,7 @@ export default function MainPage() {
                 md={12}
                 lg={12}
                 xl={12}
-                sx={{ height: 430, mb: 2 }}
+                sx={{ height: 460, mb: 2 }}
               >
                 {dashData?.length > 0 ? (
                   <PlotGrafico data={data} showTooltip={showTooltip} />
